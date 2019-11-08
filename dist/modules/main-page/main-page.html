@@ -1,0 +1,38 @@
+<main class="main">
+    <article class="article">
+        <div class="article__main --left">
+            <div class="article__tag font-accent">{this.posts[0].tag}</div>
+            <h2 class="article__title">
+                {this.posts[0].title}
+            </h2>
+            <div class="article__text">
+                {this.posts[0].body }
+            </div>
+            <app-link href="/posts-0" class="article__link font-accent">Full Story<i class="arrow-icon"></i></app-link>
+        </div>
+        <div class="article__imgs --right">
+            <div class="article__img-container --right">
+                <img src="{ this.posts[0].image }" class="article__img" />
+            </div>
+            <div class="article__img-container --small">
+                <img src="assets/images/article-img-3.jpg" class="article__img" />
+            </div>
+        </div>
+    </article>
+
+    <article class="article --center">
+        <div class="article__main">
+            <div class="article__tag font-accent">{this.posts[1].tag}</div>
+            <h2 class="article__title">
+                {this.posts[1].title}
+            </h2>
+            <div class="article__imgs">
+                <div class="article__img-container">
+                    <img src="{ this.posts[1].image }" class="article__img" />
+                </div>
+            </div>
+            <div class="article__text">{this.posts[1].body }</div>
+            <app-link href="/posts-1" class="article__link font-accent">Full Story<i class="arrow-icon"></i></app-link>
+        </div>
+    </article>
+</main>
