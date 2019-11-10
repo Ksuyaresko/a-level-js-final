@@ -1,7 +1,6 @@
 {
   "name": "final-project",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +9,19 @@
   "license": "ISC",
   "devDependencies": {
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ksuyaresko/a-level-js-final.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ksuyaresko/a-level-js-final/issues"
+  },
+  "homepage": "https://github.com/Ksuyaresko/a-level-js-final#readme",
+  "description": "",
+  "dependencies": {
+
   }
 }
