@@ -12,7 +12,7 @@ export class Footer extends HTMLElement {
         }
     }
 
-    async connectedCallback() {
+    connectedCallback() {
         this.render()
     }
 

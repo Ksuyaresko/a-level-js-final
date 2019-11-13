@@ -5,7 +5,7 @@ export class AdminPage extends HTMLElement {
         super();
         this.dataPromise = this.fetchData()
     }
-    async connectedCallback() {
+    connectedCallback() {
         this.render();
     }
 
@@ -86,7 +86,6 @@ export class AdminPage extends HTMLElement {
     }
 
     async saveArticle(event, article) {
-        console.log(article)
         let url = article ? `posts/${article}.json` : 'posts.json';
         await getDate(url, {
             method: article ? "PUT" : "POST",
