@@ -1,3 +1,7 @@
+html {
+    overflow: overlay;
+}
+
 body {
     font-family: 'Playfair Display', serif;
     font-size: 24px;
@@ -5,10 +9,25 @@ body {
     color: #273d46;
     margin: 0;
 }
+
 h1, h2, h3, h4, h5 {
     margin: 0;
     font-weight: normal;
 }
+
+img {
+    max-width: 100%;
+}
+
+.site-wrapper {
+    min-width: 1020px;
+}
+
+main-page, article-page, admin-page {
+    display: block;
+    min-height: calc(100vh - 305px);
+}
+
 .font-accent {
     font-family: 'Poppins', sans-serif;
     letter-spacing: .2em;
@@ -20,6 +39,7 @@ h1, h2, h3, h4, h5 {
     align-items: center;
 }
 .header__title {
+    display: block;
     font-size: 68px;
     color: #ffffff;
     background: #80b7b3;
@@ -27,6 +47,7 @@ h1, h2, h3, h4, h5 {
     box-shadow: 0 10px 30px rgba(0, 0, 0, .53);
     position: relative;
     z-index: 1;
+    cursor: pointer;
 }
 
 .header__sub-title {
@@ -92,6 +113,8 @@ h1, h2, h3, h4, h5 {
     cursor: pointer;
     outline: none;
     transition: all .8s;
+    overflow: hidden;
+    margin: 20px 0 0;
 }
 
 .article__link:disabled {
@@ -144,6 +167,7 @@ h1, h2, h3, h4, h5 {
     box-shadow: 0 0 30px rgba(0, 0, 0, .53);
     position: relative;
     line-height: 0;
+    max-width: 100%;
 }
 
 .article__img-container.--right {
@@ -246,7 +270,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .admin-article__actions div+div {
-    margin: 0 0 0 15px;
+    margin-left: 15px;
 }
 
 .admin-article__input {
@@ -298,7 +322,7 @@ h1, h2, h3, h4, h5 {
     top: 0;
     bottom: 0;
     background: #273d46;
-    padding: 20px;
+    padding: 120px 20px;
     width: 300px;
     visibility: hidden;
     transform: translate(-100%, 0);
@@ -372,8 +396,15 @@ h1, h2, h3, h4, h5 {
 }
 
 .aside__item {
+    display: block;
     color: rgba(255, 255, 255, .8);
     cursor: pointer;
+    padding: 10px 0;
+    transition: .2s color;
+}
+
+.aside__item:hover {
+    color: white;
 }
 
 

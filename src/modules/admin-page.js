@@ -1,12 +1,26 @@
-import {getDate, getTemplate, insertTemplate} from "../common";
+import {getDate, getTemplate, insertTemplate, createEl} from "../common";
 
 export class AdminPage extends HTMLElement {
     constructor() {
         super();
+        this.dataPromise = this.fetchData()
     }
     async connectedCallback() {
-        this.data = await getDate(`posts.json`);
-        this.innerHTML = insertTemplate.call(this, await getTemplate('/modules/admin/admin.html'));
+        this.render();
+    }
+
+    fetchData() {
+        return Promise.all([
+            getTemplate('/modules/admin/admin.html'),
+            getDate('posts.json')
+        ])
+    }
+    async render() {
+        [ this.template, this.data ] =
+            await this.dataPromise;
+
+        this.innerHTML = insertTemplate.call(this, this.template);
+
         this.data.initialValue = {
             body: `<p>Etiam porta sem malesuada magna mollis euismod. Maecenas faucibus mollis interdum. Donec id elit non mi porta gravida at eget metus.</p>
                     <p>Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>`,
@@ -19,6 +33,10 @@ export class AdminPage extends HTMLElement {
             ['admin-title', 'admin-save-btn', 'admin-cancel-btn', 'admin-article-tag', 'admin-article-title', 'admin-article-text', 'admin-articles', 'admin-image', 'article-images-container']
                 .map( item => document.getElementById(item));
 
+        this.articles && this.articles.children.length === 0 ? this.showArticlesTitles() : null;
+    }
+
+    showArticlesTitles() {
         for( let article in this.data) {
             let art = article !== 'initialValue' ? createEl(this.articles, 'div', {
                 innerHTML: `${this.data[article].title}`,
@@ -27,9 +45,9 @@ export class AdminPage extends HTMLElement {
             }) : null
             art ? art.setAttribute('data-id', this.data[article].id) : null
         }
-
         this.saveBtn.onclick = this.saveArticle.bind(this);
-        this.image.onchange = this.imagePreview.bind(this)
+        this.image.onchange = this.imagePreview.bind(this);
+        this.cancelBtn.onclick = this.addAtricle.bind(this, 'initialValue')
     }
 
     imagePreview(event) {

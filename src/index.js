@@ -8,15 +8,9 @@ import { Aside } from "./modules/aside";
 import { ArticlePage } from "./modules/article-page";
 import { AdminPage } from "./modules/admin-page"
 
-const root = document.getElementById('root');
-
 customElements.define (
     'app-root',
     RootElem
-);
-
-export const appRoot = root.appendChild(
-    document.createElement('app-root')
 );
 
 customElements.define (
@@ -52,6 +46,12 @@ customElements.define (
 customElements.define (
     'main-page',
     MainPage
+);
+
+const root = document.getElementById('root');
+
+export const appRoot = root.appendChild(
+    document.createElement('app-root')
 );
 
 window.onpopstate = (event) => {

@@ -1,10 +1,15 @@
-import { getTemplate, insertTemplate } from "../common";
+import {getDate, getTemplate, insertTemplate} from "../common";
 
 export class Header extends HTMLElement {
     constructor() {
         super();
+        this.dataPromise = this.fetchData()
     }
-    async connectedCallback() {
+    connectedCallback() {
+        this.fetchData()
+    }
+
+    async fetchData() {
         this.innerHTML = insertTemplate.call(this, await getTemplate('/modules/layout/header.html'))
     }
 }

@@ -3,22 +3,38 @@ import {getDate, getTemplate, insertTemplate, createEl} from "../common";
 export class Aside extends HTMLElement {
     constructor() {
         super();
+        this.dataPromise = this.fetchData()
     }
-    async connectedCallback() {
-        this.data = await getDate(`posts.json`);
-        this.innerHTML = insertTemplate.call(this, await getTemplate('/modules/layout/aside.html'));
-        this.btn = document.getElementById('aside__btn');
-        [this.btn, this.aside] = ['aside__btn', 'aside']
-            .map(item => document.getElementById(item))
+    connectedCallback() {
+        this.render()
+    }
+    fetchData() {
+        return Promise.all([
+            getTemplate('/modules/layout/aside.html'),
+            getDate(`posts.json`)
+        ])
+    }
+    showLinks() {
         for(let post in this.data) {
-            createEl(this.aside, 'app-link', {
+            let postLink = createEl(this.aside, 'app-link', {
                 className: 'aside__item',
                 innerText: this.data[post].title,
-                href: post
-            })
+            });
+            postLink.setAttribute('href', `posts-${post}`)
         }
         this.btn.onclick = function (event) {
             this.classList.toggle('--opened')
         }.bind(this)
+    }
+    async render() {
+        [ this.template, this.data ] =
+            await this.dataPromise;
+
+        this.innerHTML = insertTemplate.call(this, this.template);
+
+        [this.btn, this.aside] = ['aside__btn', 'aside']
+            .map(item => document.getElementById(item));
+
+        this.aside ? this.showLinks() : null;
     }
 }

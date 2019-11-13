@@ -3,6 +3,7 @@ import {getDate, getTemplate, insertTemplate, createEl} from "../common";
 export class Footer extends HTMLElement {
     constructor() {
         super();
+        this.dataPromise = this.fetchData()
         this.registerCred = {
             login: null,
             password: null,
@@ -12,9 +13,22 @@ export class Footer extends HTMLElement {
     }
 
     async connectedCallback() {
-        this.data = await getDate('users.json');
+        this.render()
+    }
 
-        this.innerHTML = insertTemplate.call(this, await getTemplate('/modules/layout/footer.html'));
+    fetchData() {
+        return Promise.all([
+            getTemplate('/modules/layout/footer.html'),
+            getDate('users.json')
+        ])
+    }
+
+    async render() {
+        [ this.template, this.data ] =
+            await this.dataPromise;
+
+        this.innerHTML = insertTemplate.call(this, this.template);
+
         this.form = this.querySelector('#form');
 
         this.form.onsubmit = function (event) {
@@ -31,7 +45,8 @@ export class Footer extends HTMLElement {
             className: 'login__inputs-box',
         });
 
-        this.isAuthorized(this.data) ? null : this.showForm()
+        this.isAuthorized(this.data) ?
+            null : this.showForm()
     }
 
     showForm() {
@@ -40,7 +55,7 @@ export class Footer extends HTMLElement {
             className: 'login__input font-accent',
             placeholder: 'login',
             name: 'login',
-            oninput: function (event) {
+            onchange: function (event) {
                 for ( let user in this.data) {
                     this.data[user].login === event.target.value ?
                         this.showPassInput(this.data[user]) : null
@@ -80,7 +95,7 @@ export class Footer extends HTMLElement {
     showRegistration() {
         this.formTitle.innerText = 'There is no such user. Would like to register?';
         this.logInbtn.disabled = true;
-        this.logInbtn.innerText = 'Sign In'
+        this.logInbtn.innerText = 'Sign In';
         this.registerCred.login = this.liginInput.value;
 
         this.liginInput.oninput = function (event) {
@@ -224,6 +239,16 @@ export class Footer extends HTMLElement {
             src: user.photo,
             alt: 'avatar',
             className: 'image-preview'
+        });
+
+        user.admin ? this.showAdminLink() : null
+    }
+
+    showAdminLink() {
+        const adminPageLink = createEl(this.inputs, 'app-link', {
+            className: 'font-accent article__link',
+            textContent: 'Go to Admin Page'
         })
+        adminPageLink.setAttribute('href', '/admin');
     }
 }
