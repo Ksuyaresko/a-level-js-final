@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "webpack --mode development --watch",
+    "prod": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -21,7 +23,5 @@
   },
   "homepage": "https://github.com/Ksuyaresko/a-level-js-final#readme",
   "description": "",
-  "dependencies": {
-
-  }
+  "dependencies": {}
 }

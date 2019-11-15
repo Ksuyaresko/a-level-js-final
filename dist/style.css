@@ -220,6 +220,10 @@ main-page, article-page, admin-page {
     font-size: 14px;
 }
 
+.login__inputs-box img {
+    max-width: 80px;
+}
+
 .file-label:hover {
     cursor: pointer;
     color: rgb(100, 97, 96);
@@ -251,6 +255,8 @@ main-page, article-page, admin-page {
 
 .admin-article {
     display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 .admin-article__title {
@@ -405,6 +411,12 @@ main-page, article-page, admin-page {
 
 .aside__item:hover {
     color: white;
+}
+
+.no-access {
+    font-size: 36px;
+    line-height: 2;
+    text-align: center;
 }
 
 

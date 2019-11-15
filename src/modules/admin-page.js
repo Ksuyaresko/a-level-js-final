@@ -1,4 +1,5 @@
 import {getDate, getTemplate, insertTemplate, createEl} from "../common";
+import { currentUser } from "./footer";
 
 export class AdminPage extends HTMLElement {
     constructor() {
@@ -6,7 +7,7 @@ export class AdminPage extends HTMLElement {
         this.dataPromise = this.fetchData()
     }
     connectedCallback() {
-        this.render();
+        currentUser && currentUser.admin ? this.render(): this.notAdminUser()
     }
 
     fetchData() {
@@ -34,6 +35,12 @@ export class AdminPage extends HTMLElement {
                 .map( item => document.getElementById(item));
 
         this.articles && this.articles.children.length === 0 ? this.showArticlesTitles() : null;
+    }
+
+    notAdminUser() {
+        this.innerHTML = `
+            <div class="no-access">You don't have access rights</br> Or you aren't authorize</div>
+        `
     }
 
     showArticlesTitles() {

@@ -1,9 +1,12 @@
 import {getDate, getTemplate, insertTemplate, createEl} from "../common";
+import { appRoot } from "../index";
+
+export let currentUser = {};
 
 export class Footer extends HTMLElement {
     constructor() {
         super();
-        this.dataPromise = this.fetchData()
+        this.dataPromise = this.fetchData();
         this.registerCred = {
             login: null,
             password: null,
@@ -22,7 +25,6 @@ export class Footer extends HTMLElement {
             getDate('users.json')
         ])
     }
-
     async render() {
         [ this.template, this.data ] =
             await this.dataPromise;
@@ -167,7 +169,7 @@ export class Footer extends HTMLElement {
     showPhoto(file) {
         return new Promise(resolve => {
             let reader = new FileReader ();
-            reader.onload = (event) => {
+            reader.onload = event => {
                 resolve(event.target.result)
             }
             reader.readAsDataURL(file);
@@ -231,7 +233,7 @@ export class Footer extends HTMLElement {
     userAuthorized(user, saveToCookie) {
         saveToCookie ?
             this.saveUserCredCookie( user.login, user.hash ) : null;
-
+        currentUser = user;
         this.formTitle.innerText = `Hi, ${user.login} !`;
         this.inputs ? this.inputs.innerHTML = '' : null;
         this.logInbtn ? this.logInbtn.remove() : null;
@@ -241,14 +243,48 @@ export class Footer extends HTMLElement {
             className: 'image-preview'
         });
 
-        user.admin ? this.showAdminLink() : null
+        const loggedUserActions = JSON.parse(localStorage.getItem ( "user" ));
+
+        loggedUserActions && loggedUserActions.login === user.login && saveToCookie ?
+            this.redirectToLastPage(loggedUserActions) :
+                null;
+
+        user.admin ? this.showAdminLink() : null;
+
+        this.logOutBtn = createEl(this.form, 'span', {
+            className: 'article__link font-accent',
+            innerText: 'Log out',
+            onclick: function (event) {
+                this.logOut()
+            }.bind(this)
+        });
+    }
+
+    logOut() {
+        currentUser = {};
+        this.authorizedPhotoShow.remove();
+        this.logOutBtn.remove();
+        this.showForm();
+        this.formTitle.innerText = 'Enter your login';
+        this.adminPageLink ? this.adminPageLink.remove() : null;
+
+        document.cookie = "login=; expires=" +
+            new Date ( 0 ).toUTCString ();
+
+        document.cookie = "hash=; expires=" +
+            new Date ( 0 ).toUTCString ()
+    }
+
+    redirectToLastPage(loggedUserActions) {
+        window.history.pushState({}, '', loggedUserActions.lastPage);
+        appRoot.setAttribute('root', loggedUserActions.lastPage)
     }
 
     showAdminLink() {
-        const adminPageLink = createEl(this.inputs, 'app-link', {
+        this.adminPageLink = createEl(this.inputs, 'app-link', {
             className: 'font-accent article__link',
             textContent: 'Go to Admin Page'
         })
-        adminPageLink.setAttribute('href', '/admin');
+        this.adminPageLink.setAttribute('href', '/admin');
     }
 }
