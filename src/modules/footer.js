@@ -29,6 +29,12 @@ export class Footer extends HTMLElement {
         [ this.template, this.data ] =
             await this.dataPromise;
 
+        this.data[ Symbol.iterator ] = function* () {
+            for( let user in this.data) {
+                yield {...this.data[user], ...{id: user}}
+            }
+        }.bind(this);
+
         this.innerHTML = insertTemplate.call(this, this.template);
 
         this.form = this.querySelector('#form');
@@ -100,12 +106,14 @@ export class Footer extends HTMLElement {
         this.logInbtn.innerText = 'Sign In';
         this.registerCred.login = this.liginInput.value;
 
+        this.liginInput.onchange = null;
         this.liginInput.oninput = function (event) {
-            let test = this.data.users.filter (
-                login => login.login === event.target.value
+            let test = Array.from(this.data).filter (
+                login => login.login === event.target.value ||
+                    event.target.value.match(new RegExp(/[^A-Za-z0-9]+/))
             ).length > 0;
             event.target.style.borderColor = test ? "red" : "";
-            event.target.title = test ? "User is already exist" : "";
+            event.target.title = test ? "Use only letters or numbers or user is already exist" : "";
             this.registerCred.login = test ? null : event.target.value;
             this.logInbtn.disabled = this.validateUserCred();
         }.bind(this);
@@ -146,7 +154,9 @@ export class Footer extends HTMLElement {
             name: 'file',
             id: 'avatar',
             onchange: function (event) {
-                event.target.files[0].type.indexOf('image') === 0 && event.target.files[0].size <= 100000 ?
+                event.target.files &&
+                event.target.files[0].type.indexOf('image') === 0 &&
+                event.target.files[0].size <= 300000 ?
                     this.showPhoto(event.target.files[0]).then(img => {
                         this.registerCred.photo = img;
                         this.imgPreview ? null : this.imgPreview = createEl(this.inputs, 'img', {
