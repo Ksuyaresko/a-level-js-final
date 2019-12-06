@@ -28,7 +28,7 @@ export class RootElem extends HTMLElement {
     }
 
     logUserAction() {
-        currentUser.login ?
+        currentUser && currentUser.login ?
             localStorage.setItem (
                 "user",
                 JSON.stringify ( {

@@ -1,7 +1,7 @@
 import {getDate, getTemplate, insertTemplate, createEl} from "../common";
 import { appRoot } from "../index";
 
-export let currentUser = {};
+export let currentUser = null;
 
 export class Footer extends HTMLElement {
     constructor() {
@@ -84,8 +84,12 @@ export class Footer extends HTMLElement {
         let userHash = document.cookie.match(new RegExp(/;?(hash=[a-zA-Z0-9]*)/)) ?
             document.cookie.match(new RegExp(/(hash=[a-zA-Z0-9]*)/))[0].split('=')[1] : null;
 
+        if (currentUser) {
+            this.userAuthorized(currentUser);
+            return true
+        }
         for ( let user in users) {
-            if (users[user].login === userLogin && users[user].hash === userHash) {
+            if (users[user].login === userLogin && users[user].hash === userHash && !users[user].admin) {
                 this.userAuthorized(users[user]);
                 return true
             }
@@ -131,6 +135,7 @@ export class Footer extends HTMLElement {
                 this.logInbtn.disabled = this.validateUserCred();
             }.bind(this)
         });
+
         this.passConfirmInput = createEl(this.inputs, 'input', {
             type: 'password',
             className: 'login__input font-accent',
@@ -203,6 +208,7 @@ export class Footer extends HTMLElement {
             class: 'login__input font-accent',
             placeholder: 'password',
             name: 'password',
+            autofocus: 'true',
             oninput: function (event) {
                 user.hash === Sha256.hash ( event.target.value )?
                     this.userAuthorized(user, true) : null
@@ -261,17 +267,19 @@ export class Footer extends HTMLElement {
 
         user.admin ? this.showAdminLink() : null;
 
-        this.logOutBtn = createEl(this.form, 'span', {
+        if(!this.logOutBtn) {
+            this.logOutBtn = createEl(this.form, 'span', {
             className: 'article__link font-accent',
             innerText: 'Log out',
             onclick: function (event) {
                 this.logOut()
             }.bind(this)
-        });
+            })
+        }
     }
 
     logOut() {
-        currentUser = {};
+        currentUser = null;
         this.authorizedPhotoShow.remove();
         this.logOutBtn.remove();
         this.showForm();
